@@ -10,3 +10,7 @@ make run
 ```sh
 make tests
 ```
+Документация к проекту: 
+```sh
+http://localhost:8080/swagger/index.html
+```
