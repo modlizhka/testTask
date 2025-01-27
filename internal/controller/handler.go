@@ -7,6 +7,13 @@ import (
 
 	"user-service/internal/model"
 
+	_ "user-service/docs"
+
+	_ "github.com/swaggo/files"
+	swaggerFiles "github.com/swaggo/files"
+	_ "github.com/swaggo/gin-swagger"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 )
@@ -50,8 +57,22 @@ func (h *Handler) Register(router *gin.Engine) {
 	router.POST(paymentURL, h.Payment)
 	router.POST(replenishmentURL, h.Replenishment)
 	router.GET(userURL, h.CheckUserTransactions)
+
+	// URL: /swagger/index.html
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 }
 
+// Payment обрабатывает запрос на перевод
+// @Summary Process a payment
+// @Description Processes a payment from one user to another
+// @Accept json
+// @Produce json
+// @Param transaction body model.Payment true "Transaction details"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /payment [post]
 func (h *Handler) Payment(ctx *gin.Context) {
 	var transaction model.Payment
 
@@ -72,6 +93,16 @@ func (h *Handler) Payment(ctx *gin.Context) {
 
 }
 
+// Replenishment обрабатывает запрос на пополнение баланса
+// @Summary Replenish user balance
+// @Description Replenishes the balance of a user
+// @Accept json
+// @Produce json
+// @Param replenishment body model.Replenishment true "Replenishment details"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /replenishment [post]
 func (h *Handler) Replenishment(ctx *gin.Context) {
 	var replenishment model.Replenishment
 
@@ -93,6 +124,15 @@ func (h *Handler) Replenishment(ctx *gin.Context) {
 
 }
 
+// CheckUser Transactions обрабатывает запрос на получение транзакций пользователя
+// @Summary Get user transactions
+// @Description Retrieves a list of recent operations for a user
+// @Produce json
+// @Param id path int true "User  ID"
+// @Success 200 {array} model.Operation
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /user/{id} [get]
 func (h *Handler) CheckUserTransactions(ctx *gin.Context) {
 	IDStr := ctx.Param("id")
 	id, err := strconv.Atoi(IDStr)

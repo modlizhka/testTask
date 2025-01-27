@@ -1,5 +1,12 @@
 package main
 
+// @title Test Task
+// @version 1.0
+// @description Тестовое задание.
+
+// @host localhost:8080
+// @BasePath /
+
 import (
 	"context"
 	"fmt"

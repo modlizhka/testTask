@@ -1,0 +1,133 @@
+basePath: /
+definitions:
+  handler.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Operation:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: integer
+      operation_type:
+        type: string
+      recipient:
+        type: integer
+      sender:
+        type: integer
+    type: object
+  model.Payment:
+    properties:
+      amount:
+        type: number
+      recipient:
+        type: integer
+      sender:
+        type: integer
+    type: object
+  model.Replenishment:
+    properties:
+      amount:
+        type: number
+      recipient:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Тестовое задание.
+  title: Test Task
+  version: "1.0"
+paths:
+  /payment:
+    post:
+      consumes:
+      - application/json
+      description: Processes a payment from one user to another
+      parameters:
+      - description: Transaction details
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/model.Payment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Process a payment
+  /replenishment:
+    post:
+      consumes:
+      - application/json
+      description: Replenishes the balance of a user
+      parameters:
+      - description: Replenishment details
+        in: body
+        name: replenishment
+        required: true
+        schema:
+          $ref: '#/definitions/model.Replenishment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Replenish user balance
+  /user/{id}:
+    get:
+      description: Retrieves a list of recent operations for a user
+      parameters:
+      - description: User  ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Operation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get user transactions
+swagger: "2.0"
