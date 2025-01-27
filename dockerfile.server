@@ -1,0 +1,9 @@
+FROM golang:1.23
+
+WORKDIR /app
+
+COPY . .
+
+RUN go build -o user_service cmd/app.go
+
+ENTRYPOINT ["/app/user_service"]
